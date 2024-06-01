@@ -42,6 +42,9 @@ export const useUserStore = defineStore({
                 role: ''
             })
 
+            const user = useCookie('user')
+            user.value = ''
+
             navigateTo('/login')
         },
 

@@ -21,5 +21,8 @@ export default defineNuxtConfig({
                 transformAssetUrls
             }
         }
+    },
+    routeRules: {
+        '/tasks': { ssr: false }
     }
 })

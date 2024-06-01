@@ -14,7 +14,7 @@ export default {
     },
 
     data: () => ({
-        page: 1,
+        search: '',
         itemsPerPage: 3,
         editModeId: null,
         headers: [
@@ -31,25 +31,39 @@ export default {
         pageCount() {
             return Math.ceil(this.tasks.length / this.itemsPerPage)
         }
+    },
+
+    methods: {
+        filter(value, query) {
+            return (
+                value != null &&
+                query != null &&
+                typeof value === 'string' &&
+                value.toString().toLocaleUpperCase().indexOf(query.toLocaleUpperCase()) !== -1
+            )
+        }
     }
 }
 </script>
 
 <template>
-    <v-app-bar :elevation="2">
-        <v-app-bar-title>{{ user.email }}</v-app-bar-title>
+    <v-app-bar elevation="2" class="position-relative">
+        <v-app-bar-title>
+            <v-text-field v-model="search" hide-details label="Поиск"></v-text-field>
+        </v-app-bar-title>
 
         <template v-slot:append>
-            <v-btn color="green">Новая задача</v-btn>
+            <NewTaskForm />
             <v-btn color="red" @click="user.logout()">Выйти</v-btn>
         </template>
     </v-app-bar>
 
     <v-data-table
-        v-model:page="page"
         :headers="headers"
         :items="tasks"
         :items-per-page="itemsPerPage"
+        :search="search"
+        :items-per-page-options="[3]"
     >
         <template v-slot:item.id="{ item }">
             <div class="me-2" size="small">{{ item.id }}</div>
@@ -87,12 +101,6 @@ export default {
                 @click="editModeId = null"
                 >mdi-content-save</v-icon
             >
-        </template>
-
-        <template v-slot:bottom>
-            <div class="text-center pt-2">
-                <v-pagination v-model="page" :length="pageCount"></v-pagination>
-            </div>
         </template>
     </v-data-table>
 </template>
